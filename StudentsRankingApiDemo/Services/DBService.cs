@@ -42,7 +42,7 @@ namespace StudentsRankingApiDemo.Services
                 {
                     while (reader.Read())
                     {
-                        studentPoints += reader.GetInt32(1);
+                        studentPoints += reader.GetInt32(2);
                     }
                     reader.Close();
 
@@ -73,7 +73,7 @@ namespace StudentsRankingApiDemo.Services
             {
                 List<StudentPointsSummary> summary = new List<StudentPointsSummary>();
                 command.Connection = connection;
-                connection.Open();
+                command.Connection.Open();
                 string selectQuery = "SELECT TOP 5 FROM StudentPointsSummary Order By Points ASC";
                 command.CommandText = selectQuery;
                 SqlDataReader reader = command.ExecuteReader();
@@ -89,6 +89,7 @@ namespace StudentsRankingApiDemo.Services
                     }
                     reader.Close();
                 }
+                command.Connection.Close();
                 return summary;
             }
         }
