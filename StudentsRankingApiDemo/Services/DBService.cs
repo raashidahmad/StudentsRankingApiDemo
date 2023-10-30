@@ -74,7 +74,7 @@ namespace StudentsRankingApiDemo.Services
                 List<StudentPointsSummary> summary = new List<StudentPointsSummary>();
                 command.Connection = connection;
                 command.Connection.Open();
-                string selectQuery = "SELECT TOP 5 FROM StudentPointsSummary Order By Points ASC";
+                string selectQuery = "SELECT TOP 5 * FROM StudentPointsSummary Order By Points ASC";
                 command.CommandText = selectQuery;
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.HasRows)
@@ -84,7 +84,8 @@ namespace StudentsRankingApiDemo.Services
                         summary.Add(new StudentPointsSummary()
                         {
                             StudentId = reader.GetInt32(0),
-                            Points = reader.GetInt32(1)
+                            StudentName = reader.GetString(1),
+                            Points = reader.GetInt32(2)
                         });
                     }
                     reader.Close();

@@ -6,8 +6,8 @@ namespace StudentsRankingApiDemo.Models
     {
         [Required]
         public int StudentId { get; set; }
-        [Required] 
-        public string StudentName { get; set; }
+        [Required]
+        public string StudentName { get; set; } = "Default";
         [Required]
         public int Points { get; set; }
     }

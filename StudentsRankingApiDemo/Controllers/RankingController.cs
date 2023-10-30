@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using StudentsRankingApiDemo.Hubs;
 using StudentsRankingApiDemo.Models;
 using StudentsRankingApiDemo.Services;
 
@@ -9,13 +11,16 @@ namespace StudentsRankingApiDemo.Controllers
     public class RankingController : ControllerBase
     {
         IDBService dbService;
-        public RankingController(IDBService dataService)
+        private readonly IHubContext<StudentRankingHub> hubContext;
+
+        public RankingController(IDBService dataService, IHubContext<StudentRankingHub> rankingHub)
         {
             dbService = dataService;
+            hubContext = rankingHub;
         }
 
         [HttpPost]
-        public IActionResult UpdateStudentPoints([FromBody] StudentPointsSummary summary)
+        public async Task<IActionResult> UpdateStudentPoints([FromBody] StudentPointsSummary summary)
         {
             if (!ModelState.IsValid)
             {
@@ -32,14 +37,16 @@ namespace StudentsRankingApiDemo.Controllers
             {
                 return BadRequest("An error occured");
             }
+
+            var latestSummary = dbService.GetLatestSummary();
+            await hubContext.Clients.All.SendAsync("SummaryUpdated", latestSummary);
             return Ok("Success");
         }
 
         [HttpGet(Name = "GetLatestSummary")]
         public IActionResult GetLatestSummary()
         {
-
-            return Ok();
+            return Ok(dbService.GetLatestSummary());
         }
     }
 }
