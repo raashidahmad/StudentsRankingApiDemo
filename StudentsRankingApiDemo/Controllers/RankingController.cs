@@ -39,7 +39,7 @@ namespace StudentsRankingApiDemo.Controllers
             }
 
             var latestSummary = dbService.GetLatestSummary();
-            await hubContext.Clients.All.SendAsync("SummaryUpdated", latestSummary);
+            await hubContext.Clients.All.SendAsync("summaryUpdated", latestSummary);
             return Ok("Success");
         }
 
